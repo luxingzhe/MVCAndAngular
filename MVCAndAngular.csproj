@@ -114,6 +114,9 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\App\e2e\protractor.conf.js" />
     <Content Include="Scripts\App\karma.conf.js" />
+    <Content Include="Scripts\App\src\app\app.component.html" />
+    <Content Include="Scripts\App\src\favicon.ico" />
+    <Content Include="Scripts\App\src\index.html" />
     <TypeScriptCompile Include="Scripts\App\src\app\app-routing.module.ts" />
     <TypeScriptCompile Include="Scripts\App\src\app\app.component.spec.ts" />
     <TypeScriptCompile Include="Scripts\App\src\app\app.component.ts" />
@@ -126,6 +129,55 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Api\OrderProductsController.cs" />
+    <Compile Include="Controllers\Core\DataLayerController.cs" />
+    <Compile Include="Controllers\Core\SystemController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderProducts.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="package.json" />
+    <None Include="packages.config" />
+    <Content Include="README.md" />
+    <Content Include="Web.config" />
+    <Content Include="Scripts\App\package-lock.json" />
+    <Content Include="Scripts\App\package.json" />
+    <Content Include="Scripts\App\README.md" />
+    <Content Include="Scripts\App\tsconfig.app.json" />
+    <Content Include="Scripts\App\tsconfig.base.json" />
+    <Content Include="Scripts\App\tsconfig.json" />
+    <Content Include="Scripts\App\tsconfig.spec.json" />
+    <Content Include="Scripts\App\tslint.json" />
+    <Content Include="Scripts\App\.browserslistrc" />
+    <Content Include="Scripts\App\.editorconfig" />
+    <Content Include="Scripts\App\.gitignore" />
+    <Content Include="Scripts\App\angular.json" />
+    <Content Include="Scripts\App\src\assets\.gitkeep" />
+    <Content Include="Scripts\App\src\styles.scss" />
+    <Content Include="Scripts\App\src\app\app.component.scss" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -159,6 +211,19 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+  </Target>
+  <Target Name="EnsureNode">
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+  </Target>
+  <Target Name="ReleaseRunNgBuild" BeforeTargets="PrepareForBuild" Condition=" '$(Configuration)' == 'Release' ">
+    <CallTarget Targets="EnsureNode" />
+    <Message Importance="high" Text="Install packages..." />
+    <Exec Command="npm install" />
+    <Message Importance="high" Text="Performing ng build for prd build..." />
+    <Exec Command="npm run build-prod" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
